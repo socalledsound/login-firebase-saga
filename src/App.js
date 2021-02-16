@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { auth } from './firebase/firebase.utils';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Header from './components/Header';
+import HomePage from './components/HomePage';
+import SignInPage from './components/SignInPage';
+
+console.log(auth);
+
+class App extends Component {
+    state = {  }
+
+    // componentDidMount(){
+    //     // const { currentUser } = this.props;
+    //     // console.log(currentUser);
+    // }
+
+    render() { 
+        return ( 
+            <div>
+                <Header />
+                <Switch>
+                    <Route exact path='/' component={HomePage} />
+                    <Route 
+                        exact path='/login'
+                        render={() => this.props.currentUser ? (
+                            <Redirect to='/' />
+                        ) : (
+                            <SignInPage />
+                        )}
+                    />
+                </Switch>
+            </div>
+         );
+    }
 }
 
-export default App;
+const mapStateToPops = state => ({
+    currentuser: state.currentUser,
+})
+ 
+export default connect(mapStateToPops)(App);
